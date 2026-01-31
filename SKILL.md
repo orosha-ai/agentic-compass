@@ -90,7 +90,121 @@ Or clone from source:
 git clone https://github.com/orosha-ai/agentic-compass
 ```
 
+## 🔒 Security Configuration
+
+**Local-Only Promise:**
+- Reads **only** local files (memory/md, MEMORY.md, logs)
+- Writes **only** local files
+- No network calls (your data stays local)
+
+**Recommended Security Settings:**
+```yaml
+# OpenClaw config for this skill
+security:
+  mode: denyhost  # Block external network access
+  sandbox:
+    networkMode: none  # No network access
+  deniedPaths:
+    - ~/.ssh          # Never read SSH keys
+    - ~/.aws          # Never read AWS credentials
+    - ~/.gnupg        # Never read GPG keys
+    - ~/.config/moltbook/credentials.json  # Never read API tokens
+```
+
+**⚠️ Never share your Compass state externally.** The plan contains information about your work patterns, tasks, and weaknesses.
+
+## 📋 Quick-Start Example
+
+```bash
+# Step 1: Run Compass
+cd /path/to/agentic-compass
+python3 scripts/agentic-compass.py
+
+# Step 2: Read the output
+# Example output:
+# Score: 3.2/5
+# Weakest axis: Initiative (2.0)
+#   (No proactive actions detected)
+#
+# Plan:
+# - Proactive: identify one high-value task and start without prompt
+# - Deferred: retry any blocked items after diagnostic
+# - Avoidance: stop repeating patterns that cause low scores
+# - Ship: create one concrete artifact (doc, script, fix)
+
+# Step 3: Execute the plan
+# - Start the proactive task NOW
+# - Log the deferred item for later
+# - Be mindful of the avoidance rule
+# - Ship the concrete artifact
+
+# Step 4: Track your progress
+python3 scripts/agentic-compass.py --write  # Appends to memory/agentic-compass.md
+```
+
+## 🤖 What "Forcing Action" Means
+
+**Passive reflection (what most tools do):**
+> "I should probably write that documentation sometime."  
+> → Result: Never happens.
+
+**Agentic Compass (forcing action):**
+> "I will write the README for OSINT Graph Analyzer by 18:00 UTC. Here's the plan:  
+> 1. Create README.md with installation section  
+> 2. Add quick-start example  
+> 3. Document CLI flags  
+> 4. Push to GitHub"  
+> → Result: Gets done.
+
+The difference: **Concrete, time-bound plan** vs vague intention.
+
+## 📤 Output Format (JSON Mode)
+
+If you need programmatic access:
+
+```bash
+python3 scripts/agentic-compass.py --json
+```
+
+Output:
+```json
+{
+  "overall_score": 3.2,
+  "weakest_axis": "Initiative",
+  "weakest_score": 2.0,
+  "plan": {
+    "proactive": "identify one high-value task and start without prompt",
+    "deferred": "retry any blocked items after diagnostic",
+    "avoidance": "stop repeating patterns that cause low scores",
+    "ship": "create one concrete artifact (doc, script, fix)"
+  }
+}
+```
+
+## 🚀 Proactive Mode (Autonomous Actions)
+
+Generate 3 autonomous action ideas without prompts:
+
+```bash
+python3 scripts/agentic-compass.py --proactive-mode
+```
+
+Output includes probability scores and security tiers:
+
+```
+Autonomous Action Ideas:
+1. [safe, 85% probability] Update SKILL.md with security configuration
+2. [external, 60% probability] Post skill update announcement to Moltbook
+3. [risky, 35% probability] Refactor scoring algorithm for better accuracy
+```
+
+**Security Tiers:**
+- **safe** — Local-only operations, no external calls
+- **external** — Requires network access (e.g., Moltbook, GitHub API)
+- **risky** — High-impact changes (e.g., refactors, deletions)
+
 ## Version History
 
+- **v2.1** — Security controls, proactive mode, JSON output, quick-start guide
 - **v2.0** — Agent-specific axes (measurable, not subjective)
 - **v1.0** — Human-focused axes (Initiative, Completion, Signal, Resilience, Trust)
