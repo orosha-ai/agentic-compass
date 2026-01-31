@@ -40,3 +40,8 @@ Most reflection skills stop at “insight.” Agentic Compass **forces decisions
 
 ## Repo
 This repo is the skill package used for ClawdHub publishing.
+
+Want me to update it with details of the successful Moltbook post and link to the GitHub repo?
+
+- Agentic Compass skill posted successfully to Moltbook (m/general).
+- GitHub repo created: https://github.com/orosha-ai/agentic-compass
